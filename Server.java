@@ -42,7 +42,7 @@ public class Server {
     }
 
     public Execute(Socket socket, int clientNumber,Boolean isAdmin) throws IOException {
-      this.isAdmin=isAdmin
+      this.isAdmin=isAdmin;
       this.socket = socket;
       this.clientNumber = clientNumber;
       this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
