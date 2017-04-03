@@ -46,17 +46,17 @@ public class DB {
 
 
   /*
+  connect to DB
+  receive from API
+  parse API data
+  send to DB
+  sleep
+
   * Constructor
-*/public DB (PrintWriter printer, BufferedReader in){
-    this.printer = printer;
-    this.in = in;
-    Calendar date = Calendar.getInstance();
-    currentDate =  sdf.format(date.getTime()) ;
-    date.add(Calendar.DATE, 7);
-    endDate = sdf.format(date.getTime());
+*/public DBadmin (){
   }
 
-
+public 
   public Connection connectDB(){
     try{
       System.out.println(currentDate);

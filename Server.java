@@ -16,11 +16,12 @@ public class Server {
   public static void main(String[] args) throws Exception {
     System.out.println("The Lock N' Laundry server is running.");
     int clientNumber = 0;
+    new Execute(clientNumber++).start();
     ServerSocket listener = new ServerSocket(9898);
 
     try {
       while (true) {
-        new Execute(listener.accept(), clientNumber++).start();
+        new Execute(listener.accept(), clientNumber++, false).start();
       }
     } finally {
       listener.close();
@@ -30,8 +31,16 @@ public class Server {
   private static class Execute extends Thread {
     private Socket socket;
     private int clientNumber;
-      public BufferedReader in;
-      public PrintWriter out;
+    public BufferedReader in;
+    public PrintWriter out;
+
+    public Execute(int clientNumber) throws IOException {
+      this.clientNumber = clientNumber;
+      this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      this.out = new PrintWriter(socket.getOutputStream(), true);
+      log("New connection with client# " + clientNumber + " at " + socket);
+    }
+
     public Execute(Socket socket, int clientNumber) throws IOException {
       this.socket = socket;
       this.clientNumber = clientNumber;
@@ -43,47 +52,19 @@ public class Server {
 public void run() {
   try {
 
-    socket.setKeepAlive(true);
 
 
-    DB DB = new DB(out, in);
+
+    if(clientNumber!=0) {
+      socket.setKeepAlive(true);
+//här ska clienten skicaks vidare
+      DB DB = new DB(out, in);
     DB.connectDB();
+}else if(clientNumber==0){
+    DBadmin DBadmin = new DBadmin();
+    DBadmin.startUpdate();
 
-    out.println("--------------------------------\n---Welcome to Lock N' Laundry---\n--------------------------------\n");
-    out.println("Enter your ID:");
-
-    int ID;
-
-
-    while (true){
-      ID = Integer.parseInt(in.readLine());
-      int confirmID = DB.login(ID);
-      if(confirmID == 1){
-        out.println("Login successful");
-        break;
-      } else {
-        out.println("Invalid ID, try again");
-      }
-    }
-
-    while (true) {
-    int mainInput = DB.mainMenu();
-
-    if(mainInput == 1 ){
-      DB.bookSlot(ID);
-    }else if (mainInput == 2){
-      DB.cancelSlot(ID);
-    }else if (mainInput == 0){
-      out.println("Goodbye");
-      in.close();
-      out.close();
-      socket.close();
-      break;
-    } else {
-      out.println("Wrong input, try again");
-    }
-  }
-
+}
   } catch (IOException e) {
       try{log("Error handling client# " + clientNumber + ": " + e);
       out.println("Goodbye");
