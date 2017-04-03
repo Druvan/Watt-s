@@ -11,6 +11,7 @@ public class DBadmin {
   PrintWriter printer;
   BufferedReader in;
   // JDBC driver name and database URL
+  //static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
   static final String DB_URL = "jdbc:mysql://83.253.24.101:942/Watts";
 
@@ -75,12 +76,12 @@ public void startUpdate(){
   public Connection connectDB(){
     try{
       System.out.println(currentDate);
-
+      Class.forName("com.mysql.jdbc.Driver"); //Får olika errors om denna är med eller inte...
       System.out.println("Connecting to database...");
       conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
       return conn;
-    }catch(SQLException se){
+    }catch(Exception se){
       //Handle errors for JDBC
       se.printStackTrace();
       return null;
