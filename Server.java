@@ -47,4 +47,29 @@ public class DB {
 
   /*
   * Constructor
-*/}
+*/public DB (PrintWriter printer, BufferedReader in){
+    this.printer = printer;
+    this.in = in;
+    Calendar date = Calendar.getInstance();
+    currentDate =  sdf.format(date.getTime()) ;
+    date.add(Calendar.DATE, 7);
+    endDate = sdf.format(date.getTime());
+  }
+
+
+  public Connection connectDB(){
+    try{
+      System.out.println(currentDate);
+      System.out.println(endDate);
+
+      System.out.println("Connecting to database...");
+      conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+      return conn;
+    }catch(SQLException se){
+      //Handle errors for JDBC
+      se.printStackTrace();
+      return null;
+    }
+  }
+}
