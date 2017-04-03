@@ -1,75 +1,112 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 import java.sql.*;
 import java.util.*;
-import java.io.*;
 
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
 
-public class DB {
-  Connection conn = null;
-  PrintWriter printer;
-  BufferedReader in;
-  // JDBC driver name and database URL
-  static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-  static final String DB_URL = "jdbc:mysql://83.253.24.101:942/Watts";
-
-  //CLASSPATH=$CLASSPATH:/usr/share/java/mysql.jar:/home/edvin/Datakom/Project/LockAndLaundry/LockAndLaundry/DB:/home/edvin/Datakom/Project/LockAndLaundry/LockAndLaundry/Server
-  //export CLASSPATH
+public class Server {
 
 
-  //  Database credentials
-  static final String USER = "awattsdmin";
-  static final String PASS = "Gemen0215sam¤!=";
+  public static void main(String[] args) throws Exception {
+    System.out.println("The Lock N' Laundry server is running.");
+    int clientNumber = 0;
+    ServerSocket listener = new ServerSocket(9898);
 
-  private static final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-  String currentDate;
-  String endDate;
-  /*
-  * PreparedStatement
-  */
-
-
-  static final String SQL_SELECTSLOTTABLE = "Select Slot,Date,Time,IFNULL(Booked,\"\") Booked_by from slottable where Date BETWEEN ? AND ?";
-  static final String SQL_SELECTWHOBOOKED = "SELECT Slot, date, concat(start, \"-\", end) AS Time FROM mybookings WHERE customerid = ? AND Date BETWEEN ? AND ?";
-  static final String SQL_INSERTBOOKING = "INSERT INTO reserved (slot_id,customer_id) SELECT slot.id,customer.id FROM slot,customer WHERE customer.id =? AND slot.id =?";
-  static final String SQL_CHECKIFEXIST = "SELECT count(*) AS sqlexist FROM slot WHERE id = ?";
-  static final String SQL_CHECKIFBOOKED = "SELECT count(*) AS sqlbooked FROM reserved WHERE slot_id = ?";
-  static final String SQL_CHECKIFBOOKEDEXISTS = "SELECT count(*) AS sqlbookedexists FROM reserved WHERE id = ?";
-  static final String SQL_DELETEBOOKEDROW = "DELETE FROM reserved WHERE id = ?";
-  static final String SQL_CHECKCUSTOMER = "SELECT count(*) AS customerexists FROM customer WHERE id = ?";
-  static final String SQL_TOOMANYBOOKINGS = "SELECT count(*) FROM number_of_bookings WHERE customer_id = ? AND date >= ?";
-
-
-  /*
-  * Constructor
-*/public DB (PrintWriter printer, BufferedReader in){
-    this.printer = printer;
-    this.in = in;
-    Calendar date = Calendar.getInstance();
-    currentDate =  sdf.format(date.getTime()) ;
-    date.add(Calendar.DATE, 7);
-    endDate = sdf.format(date.getTime());
-  }
-
-
-  public Connection connectDB(){
-    try{
-      System.out.println(currentDate);
-      System.out.println(endDate);
-
-      System.out.println("Connecting to database...");
-      conn = DriverManager.getConnection(DB_URL, USER, PASS);
-
-      return conn;
-    }catch(SQLException se){
-      //Handle errors for JDBC
-      se.printStackTrace();
-      return null;
+    try {
+      while (true) {
+        new Execute(listener.accept(), clientNumber++).start();
+      }
+    } finally {
+      listener.close();
     }
   }
+
+  private static class Execute extends Thread {
+    private Socket socket;
+    private int clientNumber;
+      public BufferedReader in;
+      public PrintWriter out;
+    public Execute(Socket socket, int clientNumber) throws IOException {
+      this.socket = socket;
+      this.clientNumber = clientNumber;
+      this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      this.out = new PrintWriter(socket.getOutputStream(), true);
+      log("New connection with client# " + clientNumber + " at " + socket);
+    }
+
+public void run() {
+  try {
+
+    socket.setKeepAlive(true);
+
+
+    DB DB = new DB(out, in);
+    DB.connectDB();
+
+    out.println("--------------------------------\n---Welcome to Lock N' Laundry---\n--------------------------------\n");
+    out.println("Enter your ID:");
+
+    int ID;
+
+
+    while (true){
+      ID = Integer.parseInt(in.readLine());
+      int confirmID = DB.login(ID);
+      if(confirmID == 1){
+        out.println("Login successful");
+        break;
+      } else {
+        out.println("Invalid ID, try again");
+      }
+    }
+
+    while (true) {
+    int mainInput = DB.mainMenu();
+
+    if(mainInput == 1 ){
+      DB.bookSlot(ID);
+    }else if (mainInput == 2){
+      DB.cancelSlot(ID);
+    }else if (mainInput == 0){
+      out.println("Goodbye");
+      in.close();
+      out.close();
+      socket.close();
+      break;
+    } else {
+      out.println("Wrong input, try again");
+    }
+  }
+
+  } catch (IOException e) {
+      try{log("Error handling client# " + clientNumber + ": " + e);
+      out.println("Goodbye");
+      in.close();
+      out.close();
+      socket.close();
+      } catch (IOException er){
+            log("Can't kill sockets, THEY ARE TOO STRONG");
+      }
+
+  }finally {
+    try {
+      socket.close();
+    } catch (IOException e) {
+      log("Can't kill sockets, THEY ARE TOO STRONG");
+    }
+    log("Connection with client# " + clientNumber + " closed");
+  }
+}
+
+private void log(String message) {
+  System.out.println(message);
+}
+
+}
 }
