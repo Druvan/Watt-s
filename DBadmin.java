@@ -59,10 +59,11 @@ public class DB {
           ResultSet res = stmt1.executeQuery();
 
   * Constructor
-*/public DBadmin (){
+*/
+  public void DBadmin () {
 
-
-public startUpdate(){
+  }
+public void startUpdate(){
 
   while (true){
 
