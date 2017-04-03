@@ -5,9 +5,6 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import java.sql.*;
-import java.util.*;
-
 
 
 public class Server {
@@ -30,6 +27,7 @@ public class Server {
   }
 
   private static class Execute extends Thread {
+    private final Boolean isAdmin;
     private Socket socket;
     private int clientNumber;
     public BufferedReader in;

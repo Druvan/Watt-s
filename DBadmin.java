@@ -1,16 +1,12 @@
-import java.sql.*;
-import java.util.*;
-import java.io.*;
-
-
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
 
-public class DB {
+public class DBadmin {
   Connection conn = null;
   PrintWriter printer;
   BufferedReader in;
