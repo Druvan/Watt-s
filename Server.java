@@ -16,7 +16,7 @@ public class DB {
   BufferedReader in;
   // JDBC driver name and database URL
   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-  static final String DB_URL = "jdbc:mysql://localhost:3306/LOCKN'LAUNDRY";
+  static final String DB_URL = "jdbc:mysql://83.253.24.101:942/Watts";
 
   //CLASSPATH=$CLASSPATH:/usr/share/java/mysql.jar:/home/edvin/Datakom/Project/LockAndLaundry/LockAndLaundry/DB:/home/edvin/Datakom/Project/LockAndLaundry/LockAndLaundry/Server
   //export CLASSPATH
