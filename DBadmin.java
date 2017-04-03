@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DB {
+public class DBadmin {
   Connection conn = null;
   PrintWriter printer;
   BufferedReader in;
@@ -59,7 +59,7 @@ public class DB {
           ResultSet res = stmt1.executeQuery();
 
   * Constructor
-*/public DBadmin (){
+*/
 
 
 public startUpdate(){
