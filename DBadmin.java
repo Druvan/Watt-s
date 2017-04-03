@@ -28,7 +28,7 @@ public class DB {
 
   private static final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
   String currentDate;
-  String endDate;
+
   /*
   * PreparedStatement
   */
@@ -51,6 +51,12 @@ public class DB {
   parse API data
   send to DB
   sleep
+  int slotExist = slotCheck(ID, SQL_CHECKCUSTOMER, "customerexists", conn);
+
+  PreparedStatement stmt1 = conn.prepareStatement(SQL_SELECTSLOTTABLE);
+          stmt1.setString(1, currentDate);
+          stmt1.setString(2, endDate);
+          ResultSet res = stmt1.executeQuery();
 
   * Constructor
 */public DBadmin (){
@@ -60,7 +66,6 @@ public
   public Connection connectDB(){
     try{
       System.out.println(currentDate);
-      System.out.println(endDate);
 
       System.out.println("Connecting to database...");
       conn = DriverManager.getConnection(DB_URL, USER, PASS);

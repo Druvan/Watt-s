@@ -14,9 +14,10 @@ public class Server {
 
 
   public static void main(String[] args) throws Exception {
-    System.out.println("The Lock N' Laundry server is running.");
+    System.out.println("Watt-s server running");
     int clientNumber = 0;
-    new Execute(clientNumber++).start();
+    Boolean isAdmin;
+    new Execute(clientNumber++,true).start();
     ServerSocket listener = new ServerSocket(9898);
 
     try {
@@ -34,14 +35,14 @@ public class Server {
     public BufferedReader in;
     public PrintWriter out;
 
-    public Execute(int clientNumber) throws IOException {
+    public Execute(int clientNumber,Boolean isAdmin) throws IOException {
+      this.isAdmin=isAdmin
       this.clientNumber = clientNumber;
-      this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      this.out = new PrintWriter(socket.getOutputStream(), true);
-      log("New connection with client# " + clientNumber + " at " + socket);
+      log("DB update running");
     }
 
-    public Execute(Socket socket, int clientNumber) throws IOException {
+    public Execute(Socket socket, int clientNumber,Boolean isAdmin) throws IOException {
+            this.isAdmin=isAdmin
       this.socket = socket;
       this.clientNumber = clientNumber;
       this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
