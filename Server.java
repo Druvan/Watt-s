@@ -36,7 +36,7 @@ public class Server {
     public PrintWriter out;
 
     public Execute(int clientNumber,Boolean isAdmin) throws IOException {
-      this.isAdmin=isAdmin
+      this.isAdmin=isAdmin;
       this.clientNumber = clientNumber;
       log("DB update running");
     }
@@ -59,8 +59,8 @@ public void run() {
     if(clientNumber!=0) {
       socket.setKeepAlive(true);
 //här ska clienten skicaks vidare
-      DB DB = new DB(out, in);
-    DB.connectDB();
+    //  DB DB = new DB(out, in);
+    //DB.connectDB();
 }else if(clientNumber==0){
     DBadmin DBadmin = new DBadmin();
     DBadmin.startUpdate();

@@ -60,9 +60,21 @@ public class DB {
 
   * Constructor
 */public DBadmin (){
+
+
+public startUpdate(){
+
+  while (true){
+
+  this.connectDB();
+  //hämta från API
+  //parse API
+  //uppdatera DB
+  //sleep
   }
 
-public 
+}
+
   public Connection connectDB(){
     try{
       System.out.println(currentDate);
