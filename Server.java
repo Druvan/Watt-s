@@ -4,7 +4,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-
+//För att köra på linux (EDVIN)
+// java -cp .:mysql-connector-java-5.1.40-bin.jar Server
 
 
 public class Server {
@@ -19,6 +20,7 @@ public class Server {
 
     try {
       while (true) {
+	 
         new Execute(listener.accept(), clientNumber++, false).start();
       }
     } finally {
@@ -61,7 +63,7 @@ public void run() {
     //DB.connectDB();
 }else if(clientNumber==0){
     DBadmin DBadmin = new DBadmin();
-    DBadmin.startUpdate();
+    DBadmin.connectDB();
 
 }
   } catch (IOException e) {

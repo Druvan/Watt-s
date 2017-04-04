@@ -62,29 +62,32 @@ public class DBadmin {
   }
 public void startUpdate(){
 
-  while (true){
-
-  this.connectDB();
+    //while (true){
+      connectDB();
   //hämta från API
   //parse API
   //uppdatera DB
   //sleep
-  }
+      // }
 
 }
 
   public Connection connectDB(){
     try{
       System.out.println(currentDate);
-      Class.forName("com.mysql.jdbc.Driver"); //Får olika errors om denna är med eller inte...
+      // Class.forName("com.mysql.jdbc.Driver"); //Får olika errors om denna är med eller inte...
       System.out.println("Connecting to database...");
       conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
       return conn;
-    }catch(Exception se){
+    }catch(SQLException se){
       //Handle errors for JDBC
+	System.out.println("SQLException: " + se.getMessage());
+	System.out.println("SQLState: " + se.getSQLState());
+	System.out.println("VendorError: " + se.getErrorCode());
       se.printStackTrace();
       return null;
     }
   }
 }
+
