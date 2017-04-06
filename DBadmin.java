@@ -164,9 +164,9 @@ public void startUpdate(){
     //while (true){
     connectDB();
     //addUser("opa", "bich", "meisbest");
-    //addPlug(11, "asdsa9999");
-    //addPlug(11, "xxx7677");
-    //delUser(11);
+    //addPlug(12, "asdsa9999");
+    //addPlug(12, "xxx7677");
+    //delUser(12);
     //hämta från API
     //parse API
     //uppdatera DB
