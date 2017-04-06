@@ -41,7 +41,7 @@ public class DBadmin {
   static final String SQL_ADDUSER = "INSERT INTO users (name, salt, password) VALUES(?, ?, ?)";
   static final String SQL_CHECKNAME = "SELECT count(*) FROM user WHERE name = ?";
   static final String SQL_ADDPLUG = "INSERT INTO plugs (owner, plugnumb) SELECT users.id, ? FROM users WHERE users.id = ?";
-
+  static final String SQL_FINDPLUGS = "SELECT * FROM plugs WHERE plugs.owner = ?";
   /*
   connect to DB
   receive from API
@@ -92,6 +92,20 @@ public class DBadmin {
 
   }          */
 
+    public synchronized ResultSet findPlug(int owner) {
+      try {
+        PreparedStatement stmt = conn.prepareStatement(SQL_FINDPLUGS);
+        stmt.setInt(1, owner);
+        ResultSet rs = stmt.executeQuery();
+        return rs;
+      }
+      catch (SQLException findp) {
+            findp.printStackTrace();
+           return null;
+      }
+    }
+
+
     public synchronized int addPlug(int owner, String plugnumb) {
       try{
         PreparedStatement stmt = conn.prepareStatement(SQL_ADDPLUG);
@@ -136,8 +150,8 @@ public void startUpdate(){
 
     //while (true){
     connectDB();
-    addUser("asd", "bich", "meisbest");
-    addPlug(9, "7asdjlk3ry98u");
+    //addUser("asd", "bich", "meisbest");
+    //addPlug(7, "77d77d7");
     //hämta från API
     //parse API
     //uppdatera DB
