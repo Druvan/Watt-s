@@ -63,7 +63,7 @@ public void run() {
     //DB.connectDB();
 }else if(clientNumber==0){
     DBadmin DBadmin = new DBadmin();
-    DBadmin.connectDB();
+    //DBadmin.connectDB();
     DBadmin.startUpdate();
 
 }

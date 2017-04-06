@@ -40,7 +40,7 @@ public class DBadmin {
   static final String SQL_TOOMANYBOOKINGS = "SELECT count(*) FROM number_of_bookings WHERE customer_id = ? AND date >= ?";
   static final String SQL_ADDUSER = "INSERT INTO users (name, salt, password) VALUES(?, ?, ?)";
   static final String SQL_CHECKNAME = "SELECT count(*) FROM user WHERE name = ?";
-  static final String SQL_CHECKPLUGID = "SELECT count(*) FROM plugs WHERE id = ?";
+  static final String SQL_ADDPLUG = "INSERT INTO plugs (owner, plugnumb) SELECT users.id, ? FROM users WHERE users.id = ?";
 
   /*
   connect to DB
@@ -92,14 +92,31 @@ public class DBadmin {
 
   }          */
 
+    public synchronized int addPlug(int owner, String plugnumb) {
+      try{
+        PreparedStatement stmt = conn.prepareStatement(SQL_ADDPLUG);
+
+        stmt.setInt(2, owner);
+         stmt.setString(1, plugnumb);
+        int ifPAcc = stmt.executeUpdate();
+        return  ifPAcc;
+      }
+      catch (SQLException addp){
+        addp.printStackTrace();
+        return -3;
+      }
+
+    }
+
+
 public synchronized int addUser(String name, String salt, String password){
   try {
     PreparedStatement stmt = conn.prepareStatement(SQL_ADDUSER);
     stmt.setString(1, name);
     stmt.setString(2, salt);
     stmt.setString(3, password);
-    int ifAcc = stmt.executeUpdate();
-    return ifAcc;
+    int ifUAcc = stmt.executeUpdate();
+    return ifUAcc;
   }
 
   catch (SQLException addex){
@@ -119,7 +136,8 @@ public void startUpdate(){
 
     //while (true){
     connectDB();
-    addUser("axel", "bich", "meisbest");
+    addUser("asd", "bich", "meisbest");
+    addPlug(9, "7asdjlk3ry98u");
     //hämta från API
     //parse API
     //uppdatera DB
