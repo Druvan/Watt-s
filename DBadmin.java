@@ -42,6 +42,7 @@ public class DBadmin {
   static final String SQL_CHECKNAME = "SELECT count(*) FROM user WHERE name = ?";
   static final String SQL_ADDPLUG = "INSERT INTO plugs (owner, plugnumb) SELECT users.id, ? FROM users WHERE users.id = ?";
   static final String SQL_FINDPLUGS = "SELECT * FROM plugs WHERE plugs.owner = ?";
+  static final String SQL_ADDPOWERTIMESTAMP = "INSERT INTO powerUse (belongsTo, timestamp, power) SELECT id,?,? FROM plugs WHERE plugs.id=?";
   /*
   connect to DB
   receive from API
@@ -93,88 +94,108 @@ public class DBadmin {
   }          */
 
     public synchronized ResultSet findPlug(int owner) {
-      try {
-        PreparedStatement stmt = conn.prepareStatement(SQL_FINDPLUGS);
-        stmt.setInt(1, owner);
-        ResultSet rs = stmt.executeQuery();
-        return rs;
-      }
-      catch (SQLException findp) {
+	try {
+	    PreparedStatement stmt = conn.prepareStatement(SQL_FINDPLUGS);
+	    stmt.setInt(1, owner);
+	    ResultSet rs = stmt.executeQuery();
+	    return rs;
+	}
+	catch (SQLException findp) {
             findp.printStackTrace();
-           return null;
-      }
+	    return null;
+	}
     }
 
 
     public synchronized int addPlug(int owner, String plugnumb) {
-      try{
-        PreparedStatement stmt = conn.prepareStatement(SQL_ADDPLUG);
+	try{
+	    PreparedStatement stmt = conn.prepareStatement(SQL_ADDPLUG);
 
-        stmt.setInt(2, owner);
-         stmt.setString(1, plugnumb);
-        int ifPAcc = stmt.executeUpdate();
-        return  ifPAcc;
-      }
-      catch (SQLException addp){
-        addp.printStackTrace();
-        return -3;
-      }
+	    stmt.setInt(2, owner);
+	    stmt.setString(1, plugnumb);
+	    int ifPAcc = stmt.executeUpdate();
+	    return  ifPAcc;
+	}
+	catch (SQLException addp){
+	    addp.printStackTrace();
+	    return -3;
+	}
+
+    }
+
+    public synchronized int addPowerTimestamp(String timestamp, int powerUse, int owner){
+	try {
+	    PreparedStatement stmt = conn.prepareStatement(SQL_ADDPOWERTIMESTAMP);
+	    stmt.setString(1, timestamp);
+	    stmt.setInt(2, powerUse);
+	    stmt.setInt(3, owner);
+	    int ifAcc = stmt.executeUpdate();
+	    return ifAcc;
+	}
+
+	catch (SQLException powerex){
+	    powerex.printStackTrace();
+	    return -2;
+	}
 
     }
 
 
-public synchronized int addUser(String name, String salt, String password){
-  try {
-    PreparedStatement stmt = conn.prepareStatement(SQL_ADDUSER);
-    stmt.setString(1, name);
-    stmt.setString(2, salt);
-    stmt.setString(3, password);
-    int ifUAcc = stmt.executeUpdate();
-    return ifUAcc;
-  }
+    public synchronized int addUser(String name, String salt, String password){
+	try {
+	    PreparedStatement stmt = conn.prepareStatement(SQL_ADDUSER);
+	    stmt.setString(1, name);
+	    stmt.setString(2, salt);
+	    stmt.setString(3, password);
+	    int ifUAcc = stmt.executeUpdate();
+	    return ifUAcc;
+	}
 
-  catch (SQLException addex){
-    addex.printStackTrace();
-    return -2;
-  }
+	catch (SQLException addex){
+	    addex.printStackTrace();
+	    return -2;
+	}
 
-}
-
-
-  public void DBadmin () {
-
-  }
-
-public void startUpdate(){
-
-
-    //while (true){
-    connectDB();
-    //addUser("asd", "bich", "meisbest");
-    //addPlug(7, "77d77d7");
-    //hämta från API
-    //parse API
-    //uppdatera DB
-    //sleep
-    // }
-}
-
-  public Connection connectDB(){
-    try{
-      System.out.println(currentDate);
-      // Class.forName("com.mysql.jdbc.Driver"); //Får olika errors om denna är med eller inte...
-      System.out.println("Connecting to database...");
-      conn = DriverManager.getConnection(DB_URL, USER, PASS);
-
-      return conn;
-    }catch(SQLException se){
-      //Handle errors for JDBC
-	System.out.println("SQLException: " + se.getMessage());
-	System.out.println("SQLState: " + se.getSQLState());
-	System.out.println("VendorError: " + se.getErrorCode());
-      se.printStackTrace();
-      return null;
     }
-  }
+
+
+    public void DBadmin () {
+
+    }
+
+    public void startUpdate(){
+
+
+	//while (true){
+	connectDB();
+	//addUser("asd", "bich", "meisbest");
+	//addPlug(7, "77d77d7");
+
+        //addPowerTimestamp("2017-04-06 15:48:00",500,4);
+
+	//hämta från API
+	//parse API
+	//uppdatera DB
+	//sleep
+	// }
+    }
+
+    public Connection connectDB(){
+	try{
+	    System.out.println(currentDate);
+	    // Class.forName("com.mysql.jdbc.Driver"); //Får olika errors om denna är med eller inte...
+	    System.out.println("Connecting to database...");
+	    conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+	    return conn;
+	}catch(SQLException se){
+	    //Handle errors for JDBC
+	    System.out.println("SQLException: " + se.getMessage());
+	    System.out.println("SQLState: " + se.getSQLState());
+	    System.out.println("VendorError: " + se.getErrorCode());
+	    se.printStackTrace();
+	    return null;
+	}
+    }
 }
 
