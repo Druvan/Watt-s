@@ -1,10 +1,8 @@
-import java.io.BufferedReader;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.io.*;
+import java.util.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.sql.*;
 
 public class DBadmin {
   Connection conn = null;
@@ -40,7 +38,7 @@ public class DBadmin {
   static final String SQL_DELETEBOOKEDROW = "DELETE FROM reserved WHERE id = ?";
   static final String SQL_CHECKCUSTOMER = "SELECT count(*) AS customerexists FROM customer WHERE id = ?";
   static final String SQL_TOOMANYBOOKINGS = "SELECT count(*) FROM number_of_bookings WHERE customer_id = ? AND date >= ?";
-
+  static final String SQL_ADDUSER = "INSERT INTO users (name, salt, password) VALUES(?, ?, ?)";
 
   /*
   connect to DB
@@ -57,6 +55,24 @@ public class DBadmin {
 
   * Constructor
 */
+public synchronized int addUser(String name, String salt, String password){
+  try {
+    PreparedStatement stmt = conn.prepareStatement(SQL_ADDUSER);
+    stmt.setString(1, name);
+    stmt.setString(2, salt);
+    stmt.setString(3, password);
+    int ifAcc = stmt.executeUpdate();
+    return ifAcc;
+  }
+
+  catch (SQLException addex){
+    addex.printStackTrace();
+    return -2;
+  }
+
+}
+
+
   public void DBadmin () {
 
   }
@@ -64,6 +80,7 @@ public void startUpdate(){
 
     //while (true){
       connectDB();
+      addUser("axel","bich","meisbest" );
   //hämta från API
   //parse API
   //uppdatera DB

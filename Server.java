@@ -64,6 +64,7 @@ public void run() {
 }else if(clientNumber==0){
     DBadmin DBadmin = new DBadmin();
     DBadmin.connectDB();
+    DBadmin.startUpdate();
 
 }
   } catch (IOException e) {
