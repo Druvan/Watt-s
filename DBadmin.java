@@ -42,7 +42,11 @@ public class DBadmin {
   static final String SQL_CHECKNAME = "SELECT count(*) FROM user WHERE name = ?";
   static final String SQL_ADDPLUG = "INSERT INTO plugs (owner, plugnumb) SELECT users.id, ? FROM users WHERE users.id = ?";
   static final String SQL_FINDPLUGS = "SELECT * FROM plugs WHERE plugs.owner = ?";
+
   static final String SQL_ADDPOWERTIMESTAMP = "INSERT INTO powerUse (belongsTo, timestamp, power) SELECT id,?,? FROM plugs WHERE plugs.id=?";
+
+  static final String SQL_DELETEUSER = "DELETE FROM users WHERE id = ?";
+
   /*
   connect to DB
   receive from API
@@ -58,41 +62,18 @@ public class DBadmin {
 
   * Constructor
 */
-  /*
-  public synchronized  int checkPlug(int id){
-    PreparedStatement stmt = conn.prepareStatement(SQL_CHECKPLUGID);
-
-    if(id = 0){
-
+  public synchronized int delUser(int id){
+    try{
+      PreparedStatement stmt = conn.prepareStatement(SQL_DELETEUSER);
+      stmt.setInt(1, id);
+      int ifUDel = stmt.executeUpdate();
+      return  ifUDel;
     }
-    else
-
-  }*/
-//Make sure that users can't have the same username
-    /*
-   public synchronized boolean checkUserName(String name){
-      try{
-      PreparedStatement stmt = conn.prepareStatement(SQL_CHECKNAME);
-      stmt.setString(1, name);
-      ResultSet rs = stmt.executeQuery();
-      int numbname = rs.getInt(0);
-      if (numbname == 0) {
-        System.out.printf("OK");
-        return true;
-
-      }
-      else {
-        System.out.printf("FEL");
-        return false;
-      }
+    catch (SQLException deletu) {
+      deletu.printStackTrace();
+      return -9;
     }
-    catch (SQLException samex) {
-         samex.printStackTrace();
-         return false;
-    }
-
-  }          */
-
+  }
     public synchronized ResultSet findPlug(int owner) {
 	try {
 	    PreparedStatement stmt = conn.prepareStatement(SQL_FINDPLUGS);
