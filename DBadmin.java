@@ -39,6 +39,8 @@ public class DBadmin {
   static final String SQL_CHECKCUSTOMER = "SELECT count(*) AS customerexists FROM customer WHERE id = ?";
   static final String SQL_TOOMANYBOOKINGS = "SELECT count(*) FROM number_of_bookings WHERE customer_id = ? AND date >= ?";
   static final String SQL_ADDUSER = "INSERT INTO users (name, salt, password) VALUES(?, ?, ?)";
+  static final String SQL_CHECKNAME = "SELECT count(*) FROM user WHERE name = ?";
+  static final String SQL_CHECKPLUGID = "SELECT count(*) FROM plugs WHERE id = ?";
 
   /*
   connect to DB
@@ -55,6 +57,41 @@ public class DBadmin {
 
   * Constructor
 */
+  /*
+  public synchronized  int checkPlug(int id){
+    PreparedStatement stmt = conn.prepareStatement(SQL_CHECKPLUGID);
+
+    if(id = 0){
+
+    }
+    else
+
+  }*/
+//Make sure that users can't have the same username
+    /*
+   public synchronized boolean checkUserName(String name){
+      try{
+      PreparedStatement stmt = conn.prepareStatement(SQL_CHECKNAME);
+      stmt.setString(1, name);
+      ResultSet rs = stmt.executeQuery();
+      int numbname = rs.getInt(0);
+      if (numbname == 0) {
+        System.out.printf("OK");
+        return true;
+
+      }
+      else {
+        System.out.printf("FEL");
+        return false;
+      }
+    }
+    catch (SQLException samex) {
+         samex.printStackTrace();
+         return false;
+    }
+
+  }          */
+
 public synchronized int addUser(String name, String salt, String password){
   try {
     PreparedStatement stmt = conn.prepareStatement(SQL_ADDUSER);
@@ -76,17 +113,18 @@ public synchronized int addUser(String name, String salt, String password){
   public void DBadmin () {
 
   }
+
 public void startUpdate(){
 
-    //while (true){
-      connectDB();
-      addUser("axel","bich","meisbest" );
-  //hämta från API
-  //parse API
-  //uppdatera DB
-  //sleep
-      // }
 
+    //while (true){
+    connectDB();
+    addUser("axel", "bich", "meisbest");
+    //hämta från API
+    //parse API
+    //uppdatera DB
+    //sleep
+    // }
 }
 
   public Connection connectDB(){
