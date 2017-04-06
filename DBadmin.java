@@ -42,6 +42,7 @@ public class DBadmin {
   static final String SQL_CHECKNAME = "SELECT count(*) FROM user WHERE name = ?";
   static final String SQL_ADDPLUG = "INSERT INTO plugs (owner, plugnumb) SELECT users.id, ? FROM users WHERE users.id = ?";
   static final String SQL_FINDPLUGS = "SELECT * FROM plugs WHERE plugs.owner = ?";
+  static final String SQL_DELETEUSER = "DELETE FROM users WHERE id = ?";
   /*
   connect to DB
   receive from API
@@ -57,6 +58,18 @@ public class DBadmin {
 
   * Constructor
 */
+  public synchronized int delUser(int id){
+    try{
+      PreparedStatement stmt = conn.prepareStatement(SQL_DELETEUSER);
+      stmt.setInt(1, id);
+      int ifUDel = stmt.executeUpdate();
+      return  ifUDel;
+    }
+    catch (SQLException deletu) {
+      deletu.printStackTrace();
+      return -9;
+    }
+  }
   /*
   public synchronized  int checkPlug(int id){
     PreparedStatement stmt = conn.prepareStatement(SQL_CHECKPLUGID);
@@ -111,7 +124,7 @@ public class DBadmin {
         PreparedStatement stmt = conn.prepareStatement(SQL_ADDPLUG);
 
         stmt.setInt(2, owner);
-         stmt.setString(1, plugnumb);
+        stmt.setString(1, plugnumb);
         int ifPAcc = stmt.executeUpdate();
         return  ifPAcc;
       }
@@ -150,8 +163,10 @@ public void startUpdate(){
 
     //while (true){
     connectDB();
-    //addUser("asd", "bich", "meisbest");
-    //addPlug(7, "77d77d7");
+    //addUser("opa", "bich", "meisbest");
+    //addPlug(11, "asdsa9999");
+    //addPlug(11, "xxx7677");
+    //delUser(11);
     //hämta från API
     //parse API
     //uppdatera DB
