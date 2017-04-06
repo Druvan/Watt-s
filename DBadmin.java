@@ -16,7 +16,7 @@ public class DBadmin {
   static final String DB_URL = "jdbc:mysql://83.253.24.101:942/Watts";
 
   //CLASSPATH=$CLASSPATH:/usr/share/java/mysql.jar:/home/edvin/Datakom/Project/LockAndLaundry/LockAndLaundry/DB:/home/edvin/Datakom/Project/LockAndLaundry/LockAndLaundry/Server
-  //export CLASSPATH
+  //export CLASSPATH asdasd
 
 
   //  Database credentials
