@@ -149,6 +149,8 @@ public class DBadmin {
 
 	//while (true){
 	connectDB();
+	HDAPI plugupdater = new HDAPI();
+	plugupdater.login();
 	//addUser("asd", "bich", "meisbest");
 	//addPlug(7, "77d77d7");
 

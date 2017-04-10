@@ -1,0 +1,51 @@
+import java.net.*;
+import org.json.simple.JSONObject;
+import java.io.*;
+
+public class HDAPI{
+
+
+    public void HDAPI(){}
+
+
+
+
+    public void login() {
+
+    try {
+ 
+	String url = "https://smarthome.hd-wireless.com:9001/login";
+ 
+	URL obj = new URL(url);
+	HttpURLConnection HDconn = (HttpURLConnection) obj.openConnection();
+ 
+	HDconn.setRequestProperty("Content-Type", "application/json");
+	//  HDconn.setRequestProperty("X-Application-Key:","");
+	HDconn.setRequestProperty("Accept", "application/json");
+	HDconn.setDoOutput(true);
+ 
+	HDconn.setRequestMethod("POST");
+	JSONObject jsonObj = new JSONObject(); 
+	jsonObj.put("ID","joachim.lindborg@lsys.se");
+	jsonObj.put("Password","4WR2wUTp");
+
+	OutputStreamWriter out = new OutputStreamWriter(HDconn.getOutputStream());
+	out.write(jsonObj.toString());
+	out.close();
+ 
+	InputStreamReader in =new InputStreamReader(HDconn.getInputStream());   
+	int data=in.read();
+	String response="";
+	while(data != -1){
+	    response += (char) data;
+	    data = in.read();
+	}
+	System.out.println(response);
+	in.close();
+} catch (Exception e) {
+    e.printStackTrace();
+}
+
+    }
+}
+//curl -X POST -H "Content-Type: application/json" -H "X-Application-Key: " -H "Accept: application/json" -d '{ "Id": "joachim.lindborg@lsys.se", "Password": "4WR2wUTp", }' https://smarthome.hd-wireless.com:9001/login
