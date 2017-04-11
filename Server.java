@@ -63,8 +63,11 @@ public void run() {
     //DB.connectDB();
 }else if(clientNumber==0){
     DBadmin DBadmin = new DBadmin();
+    HDAPI plugsAPI = new HDAPI();
+    String token = plugsAPI.login();
+    System.out.println(token);
     //DBadmin.connectDB();
-    DBadmin.startUpdate();
+    // DBadmin.startUpdate();
 
 }
   } catch (IOException e) {
