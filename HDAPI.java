@@ -10,6 +10,8 @@ import org.apache.commons.io.IOUtils;
 
 public class HDAPI{
     static final String URL = "https://smarthome.hd-wireless.com:9001";
+    static final String loginURL = URL+"/login";
+    static final String boxesURL = URL+"/boxes";
     JSONParser parser = new JSONParser();
     private static final JSONObject jsonLogin = new JSONObject(){
     {
@@ -34,8 +36,7 @@ public class HDAPI{
 
 	try {
  
-	    String url = URL+"/login";
-	    HttpURLConnection HDconn = httpPost(url,NoToken);
+	    HttpURLConnection HDconn = httpPost(loginURL,NoToken);
 
 	    OutputStreamWriter out = new OutputStreamWriter(HDconn.getOutputStream());
 	    out.write(jsonLogin.toString());
@@ -50,17 +51,39 @@ public class HDAPI{
 	    e.printStackTrace();
 	    return null;
 	}
-
-
-
     }
+	public JSONObject getBoxes(String token){
+
+	try {
+ 
+	    HttpURLConnection HDconn = httpGet(boxesURL,token);
+
+	    int respCode = HDconn.getResponseCode();
+	    
+	    InputStreamReader in =new InputStreamReader(HDconn.getInputStream());
+	    String response = IOUtils.toString(in);
+	    System.out.println(response);
+	    JSONObject Jresp = inputToJSON(HDconn);
+	    System.out.println(Jresp);
+
+	    return Jresp;
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    return null;
+	}
+
+
+}
+
+
+    
     private HttpURLConnection httpPost(String url,String token){
 	try{
 	URL obj = new URL(url);
 	HttpURLConnection HDconn = (HttpURLConnection) obj.openConnection();
  
 	HDconn.setRequestProperty("Content-Type", "application/json");
-	if(token!=null) {HDconn.setRequestProperty("AuthenticateToken",token);}
+	if(token!=null) {HDconn.setRequestProperty("X-Authenticate-Token",token);}
 	HDconn.setRequestProperty("Accept", "application/json");
 	HDconn.setDoOutput(true);
  
@@ -72,6 +95,28 @@ public class HDAPI{
 	}
 
     }
+
+ private HttpURLConnection httpGet(String url,String token){
+	try{
+	URL obj = new URL(url);
+	HttpURLConnection HDconn = (HttpURLConnection) obj.openConnection();
+ 
+	HDconn.setRequestProperty("Accept", "application/json");
+        HDconn.setRequestProperty("X-Authenticate-Token",token);
+
+ 
+	HDconn.setRequestMethod("GET");
+	return HDconn;
+	}catch(Exception hG) {
+	     hG.printStackTrace();
+	    return null;
+	}
+
+    }
+    //curl -X GET --header 'Accept: application/json' --header 'X-Authenticate-Token: joachim.lindborg@lsys.se:20170513085611:IQeazexJKqfUjS34VJOgqwXfVDU='  'https://smarthome.hd-wireless.com:9001/boxes'
+    //--header 'X-Application-Key:'
+
+
 
 
     private JSONObject inputToJSON(HttpURLConnection conn){

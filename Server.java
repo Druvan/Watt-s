@@ -4,6 +4,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 //För att köra på linux (EDVIN)
 // java -cp .:mysql-connector-java-5.1.40-bin.jar Server
 
@@ -62,10 +67,12 @@ public void run() {
     //  DB DB = new DB(out, in);
     //DB.connectDB();
 }else if(clientNumber==0){
-    DBadmin DBadmin = new DBadmin();
+    
     HDAPI plugsAPI = new HDAPI();
     String token = plugsAPI.login();
     System.out.println(token);
+    JSONObject boxResp = plugsAPI.getBoxes(token);
+    System.out.println(boxResp.toString());
     //DBadmin.connectDB();
     // DBadmin.startUpdate();
 
