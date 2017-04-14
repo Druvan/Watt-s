@@ -4,6 +4,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import java.io.*;
+
 import org.apache.commons.io.IOUtils;
 
 
@@ -42,8 +43,8 @@ public class HDAPI{
 	    out.write(jsonLogin.toString());
 	    out.close();
 	    
-	    InputStreamReader in =new InputStreamReader(HDconn.getInputStream()); 
-	    JSONObject Jresp = inputToJSON(HDconn);
+
+	    JSONObject Jresp = inputToJSONObject(HDconn);
 	    String token = fromJson(Jresp,"AuthenticateToken");
 
 	    return token;
@@ -52,7 +53,7 @@ public class HDAPI{
 	    return null;
 	}
     }
-	public JSONObject getBoxes(String token){
+	public JSONArray getBoxes(String token){
 
 	try {
  
@@ -60,13 +61,10 @@ public class HDAPI{
 
 	    int respCode = HDconn.getResponseCode();
 	    
-	    InputStreamReader in =new InputStreamReader(HDconn.getInputStream());
-	    String response = IOUtils.toString(in);
-	    System.out.println(response);
-	    JSONObject Jresp = inputToJSON(HDconn);
-	    System.out.println(Jresp);
 
-	    return Jresp;
+	    JSONArray resp = inputToJSONArray(HDconn);
+
+	    return resp;
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return null;
@@ -74,6 +72,7 @@ public class HDAPI{
 
 
 }
+
 
 
     
@@ -118,23 +117,49 @@ public class HDAPI{
 
 
 
-
-    private JSONObject inputToJSON(HttpURLConnection conn){
+    private JSONArray inputToJSONArray(HttpURLConnection conn){
 	try{
 	    InputStreamReader in =new InputStreamReader(conn.getInputStream());   
 	    String response = IOUtils.toString(in);
-	    JSONObject json = stringToJSON(response);
-	    if(json instanceof JSONObject){
+	    JSONArray json = stringToJSONArray(response);
+	    if(json instanceof JSONArray){
 		return json;
 	    }
 	else return null;
-	}catch(Exception itj){
-	    itj.printStackTrace();
+	}catch(Exception itja){
+	    itja.printStackTrace();
 	    return null;
 	}
     }
 
-    public JSONObject stringToJSON(String string){
+
+    private JSONObject inputToJSONObject(HttpURLConnection conn){
+	try{
+	    InputStreamReader in =new InputStreamReader(conn.getInputStream());   
+	    String response = IOUtils.toString(in);
+	    JSONObject json = stringToJSONObject(response);
+	    if(json instanceof JSONObject){
+		return json;
+	    }
+	else return null;
+	}catch(Exception itjo){
+	    itjo.printStackTrace();
+	    return null;
+	}
+    }
+
+        public JSONArray stringToJSONArray(String string){
+	try{
+	    JSONArray json = (JSONArray) parser.parse(string);
+	    return json;
+	}catch(Exception stj){
+	    stj.printStackTrace();
+	    return null;
+	}
+
+    }
+
+    public JSONObject stringToJSONObject(String string){
 	try{
 	    JSONObject json = (JSONObject) parser.parse(string);
 	    return json;

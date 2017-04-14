@@ -71,7 +71,7 @@ public void run() {
     HDAPI plugsAPI = new HDAPI();
     String token = plugsAPI.login();
     System.out.println(token);
-    JSONObject boxResp = plugsAPI.getBoxes(token);
+    JSONArray boxResp = plugsAPI.getBoxes(token);
     System.out.println(boxResp.toString());
     //DBadmin.connectDB();
     // DBadmin.startUpdate();
