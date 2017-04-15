@@ -14,17 +14,18 @@ public class HDAPI{
     static final String loginURL = URL+"/login";
     static final String boxesURL = URL+"/boxes";
     JSONParser parser = new JSONParser();
-    private static final JSONObject jsonLogin = new JSONObject(){
-    {
-        try {
-            put("ID","joachim.lindborg@lsys.se");
-	    put("Password","4WR2wUTp");
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-};
     static final String NoToken = null;
+
+    private static final JSONObject jsonLogin = new JSONObject(){
+	    {
+		try {
+		    put("ID","joachim.lindborg@lsys.se");
+		    put("Password","4WR2wUTp");
+		} catch(Exception e){
+		    e.printStackTrace();
+		}
+	    }
+	};
 
 
     public void HDAPI(){
@@ -53,7 +54,8 @@ public class HDAPI{
 	    return null;
 	}
     }
-	public JSONArray getBoxes(String token){
+
+    public JSONArray getBoxes(String token){
 
 	try {
  
@@ -71,43 +73,51 @@ public class HDAPI{
 	}
 
 
-}
+    }
+    public void getPowerNow(String token, String boxname) throws Exception{
+        String urlstring = URL+"/"+boxname+"/database/profile/power/now";
+	HttpURLConnection HDconn = httpGet(urlstring,token);
+	int respCode = HDconn.getResponseCode();
+	String resp = inputToString(HDconn); 
+	System.out.println(resp.toString());
+	//	return resp;
 
+    }
 
 
     
     private HttpURLConnection httpPost(String url,String token){
 	try{
-	URL obj = new URL(url);
-	HttpURLConnection HDconn = (HttpURLConnection) obj.openConnection();
+	    URL obj = new URL(url);
+	    HttpURLConnection HDconn = (HttpURLConnection) obj.openConnection();
  
-	HDconn.setRequestProperty("Content-Type", "application/json");
-	if(token!=null) {HDconn.setRequestProperty("X-Authenticate-Token",token);}
-	HDconn.setRequestProperty("Accept", "application/json");
-	HDconn.setDoOutput(true);
+	    HDconn.setRequestProperty("Content-Type", "application/json");
+	    if(token!=null) {HDconn.setRequestProperty("X-Authenticate-Token",token);}
+	    HDconn.setRequestProperty("Accept", "application/json");
+	    HDconn.setDoOutput(true);
  
-	HDconn.setRequestMethod("POST");
-	return HDconn;
+	    HDconn.setRequestMethod("POST");
+	    return HDconn;
 	}catch(Exception hP) {
-	     hP.printStackTrace();
+	    hP.printStackTrace();
 	    return null;
 	}
 
     }
 
- private HttpURLConnection httpGet(String url,String token){
+    private HttpURLConnection httpGet(String url,String token){
 	try{
-	URL obj = new URL(url);
-	HttpURLConnection HDconn = (HttpURLConnection) obj.openConnection();
+	    URL obj = new URL(url);
+	    HttpURLConnection HDconn = (HttpURLConnection) obj.openConnection();
  
-	HDconn.setRequestProperty("Accept", "application/json");
-        HDconn.setRequestProperty("X-Authenticate-Token",token);
+	    HDconn.setRequestProperty("Accept", "application/json");
+	    HDconn.setRequestProperty("X-Authenticate-Token",token);
 
  
-	HDconn.setRequestMethod("GET");
-	return HDconn;
+	    HDconn.setRequestMethod("GET");
+	    return HDconn;
 	}catch(Exception hG) {
-	     hG.printStackTrace();
+	    hG.printStackTrace();
 	    return null;
 	}
 
@@ -116,16 +126,26 @@ public class HDAPI{
     //--header 'X-Application-Key:'
 
 
-
-    private JSONArray inputToJSONArray(HttpURLConnection conn){
+    private String inputToString(HttpURLConnection conn){
 	try{
 	    InputStreamReader in =new InputStreamReader(conn.getInputStream());   
 	    String response = IOUtils.toString(in);
+
+		return response;
+	}catch(Exception its){
+	    its.printStackTrace();
+	    return null;
+	}
+    }
+
+    private JSONArray inputToJSONArray(HttpURLConnection conn){
+	try{
+	    String response = inputToString(conn);
 	    JSONArray json = stringToJSONArray(response);
 	    if(json instanceof JSONArray){
 		return json;
 	    }
-	else return null;
+	    else return null;
 	}catch(Exception itja){
 	    itja.printStackTrace();
 	    return null;
@@ -135,20 +155,19 @@ public class HDAPI{
 
     private JSONObject inputToJSONObject(HttpURLConnection conn){
 	try{
-	    InputStreamReader in =new InputStreamReader(conn.getInputStream());   
-	    String response = IOUtils.toString(in);
+	    String response = inputToString(conn);
 	    JSONObject json = stringToJSONObject(response);
 	    if(json instanceof JSONObject){
 		return json;
 	    }
-	else return null;
+	    else return null;
 	}catch(Exception itjo){
 	    itjo.printStackTrace();
 	    return null;
 	}
     }
 
-        public JSONArray stringToJSONArray(String string){
+    public JSONArray stringToJSONArray(String string){
 	try{
 	    JSONArray json = (JSONArray) parser.parse(string);
 	    return json;
@@ -181,23 +200,23 @@ public class HDAPI{
     }  
 
 
-/** 
- * Parses the provided string into a  {@code JSONObject}.
- * @param json string to be parsed
- * @return a {@code JSONObject}
- * @throws {@code AssertionError} if the string cannot be parsed into a {@code JSONObject}
+    /** 
+     * Parses the provided string into a  {@code JSONObject}.
+     * @param json string to be parsed
+     * @return a {@code JSONObject}
+     * @throws {@code AssertionError} if the string cannot be parsed into a {@code JSONObject}
  
-protected JSONObject parseJSONObject(String json) throws AssertionError {
-  JSONParser parser=getJSONParser();
-  try {
-    Object obj=parser.parse(json);
-    assertTrue(obj instanceof JSONObject);
-    return (JSONObject)obj;
-  }
- catch (  Exception e) {
-    throw new AssertionError("not a valid JSON object: " + e.getMessage());
-  }
-}
-*/
+     protected JSONObject parseJSONObject(String json) throws AssertionError {
+     JSONParser parser=getJSONParser();
+     try {
+     Object obj=parser.parse(json);
+     assertTrue(obj instanceof JSONObject);
+     return (JSONObject)obj;
+     }
+     catch (  Exception e) {
+     throw new AssertionError("not a valid JSON object: " + e.getMessage());
+     }
+     }
+    */
 }
 //curl -X POST -H "Content-Type: application/json" -H "X-Application-Key: " -H "Accept: application/json" -d '{ "Id": "joachim.lindborg@lsys.se", "Password": "4WR2wUTp", }' https://smarthome.hd-wireless.com:9001/login

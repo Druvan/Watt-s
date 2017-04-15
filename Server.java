@@ -73,12 +73,15 @@ public void run() {
     System.out.println(token);
     JSONArray boxResp = plugsAPI.getBoxes(token);
     System.out.println(boxResp.toString());
+    System.out.println(boxResp.get(0));
+    plugsAPI.getPowerNow(token,(String)boxResp.get(0));
     //DBadmin.connectDB();
     // DBadmin.startUpdate();
 
 }
-  } catch (IOException e) {
+  } catch (Exception e) {
       try{log("Error handling client# " + clientNumber + ": " + e);
+	  e.printStackTrace();
       out.println("Goodbye");
       in.close();
       out.close();
