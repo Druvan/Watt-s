@@ -8,11 +8,14 @@ import java.io.*;
 import org.apache.commons.io.IOUtils;
 
 
+//curl -X GET --header 'Accept: application/json' --header 'X-Authenticate-Token: joachim.lindborg@lsys.se:20170525171105:P01jJQ00DUF5lYGgEotjVX/MR5Q=' --header 'X-Application-Key: ' 'https://smarthome.hd-wireless.com:9001/boxes/78c40e104b53/database/profile/power/now'
+
 
 public class HDAPI{
     static final String URL = "https://smarthome.hd-wireless.com:9001";
     static final String loginURL = URL+"/login";
     static final String boxesURL = URL+"/boxes";
+    static final String powerNowEndURL = "/database/profile/power/now";
     JSONParser parser = new JSONParser();
     static final String NoToken = null;
 
@@ -74,18 +77,31 @@ public class HDAPI{
 
 
     }
-    public void getPowerNow(String token, String boxname) throws Exception{
-        String urlstring = URL+"/"+boxname+"/database/profile/power/now";
+    public String getPowerNow(String token, String boxname) throws Exception{
+        String urlstring = boxesURL+"/"+boxname+powerNowEndURL;
 	HttpURLConnection HDconn = httpGet(urlstring,token);
 	int respCode = HDconn.getResponseCode();
 	String resp = inputToString(HDconn); 
-	System.out.println(resp.toString());
-	//	return resp;
+	return resp;
+    }
+
+    public JSONObject getStatistics(String token,String boxname,int starttime, int endtime) throws Exception{
+	String urlstring = generateStatisticsURL(boxname,starttime,endtime);
+	HttpURLConnection HDconn = httpGet(urlstring,token);
+	int respCode = HDconn.getResponseCode();
+	JSONObject resp = inputToJSONObject(HDconn);
+	return resp;
 
     }
 
+    public String generateStatisticsURL(String boxname, int starttime, int endtime){
+	String start = Integer.toString(starttime);
+	String end = Integer.toString(endtime);
+	return boxesURL+"/"+boxname+"/statistics?begin_time=2017-03-31T"+start+":00&end_time=2017-03-31T"+end+":00";
+    }
 
-    
+
+
     private HttpURLConnection httpPost(String url,String token){
 	try{
 	    URL obj = new URL(url);
@@ -122,8 +138,6 @@ public class HDAPI{
 	}
 
     }
-    //curl -X GET --header 'Accept: application/json' --header 'X-Authenticate-Token: joachim.lindborg@lsys.se:20170513085611:IQeazexJKqfUjS34VJOgqwXfVDU='  'https://smarthome.hd-wireless.com:9001/boxes'
-    //--header 'X-Application-Key:'
 
 
     private String inputToString(HttpURLConnection conn){

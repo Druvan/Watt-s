@@ -60,7 +60,6 @@ public void run() {
 
 
 
-
     if(clientNumber!=0) {
       socket.setKeepAlive(true);
 //här ska clienten skicaks vidare
@@ -68,13 +67,15 @@ public void run() {
     //DB.connectDB();
 }else if(clientNumber==0){
     
+    String token = "joachim.lindborg@lsys.se:20170525171105:P01jJQ00DUF5lYGgEotjVX/MR5Q=";
+
     HDAPI plugsAPI = new HDAPI();
-    String token = plugsAPI.login();
-    System.out.println(token);
+    //String token = plugsAPI.login();
     JSONArray boxResp = plugsAPI.getBoxes(token);
-    System.out.println(boxResp.toString());
-    System.out.println(boxResp.get(0));
-    plugsAPI.getPowerNow(token,(String)boxResp.get(0));
+    String powerNow = plugsAPI.getPowerNow(token,(String)boxResp.get(1));
+    JSONObject statResp = plugsAPI.getStatistics(token,(String)boxResp.get(1),18,19);
+    System.out.println(statResp);
+
     //DBadmin.connectDB();
     // DBadmin.startUpdate();
 
