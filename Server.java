@@ -65,17 +65,23 @@ public void run() {
 //här ska clienten skicaks vidare
     //  DB DB = new DB(out, in);
     //DB.connectDB();
-}else if(clientNumber==0){
+
+
+    }else if(clientNumber==0){ // tråd som hämtar från HD
     
     String token = "joachim.lindborg@lsys.se:20170525171105:P01jJQ00DUF5lYGgEotjVX/MR5Q=";
 
     HDAPI plugsAPI = new HDAPI();
     //String token = plugsAPI.login();
     JSONArray boxResp = plugsAPI.getBoxes(token);
-    String powerNow = plugsAPI.getPowerNow(token,(String)boxResp.get(1));
-    JSONObject statResp = plugsAPI.getStatistics(token,(String)boxResp.get(1),18,19);
+    String powerNow1 = plugsAPI.getPowerNow(token,(String)boxResp.get(0));
+    String powerNow2 = plugsAPI.getPowerNow(token,(String)boxResp.get(1));
+    String powerNow3 = plugsAPI.getPowerNow(token,(String)boxResp.get(2));
+    JSONObject statResp = plugsAPI.getStatistics(token,(String)boxResp.get(1),8,9);
     System.out.println(statResp);
-
+    System.out.println(powerNow1);
+    System.out.println(powerNow2);
+    System.out.println(powerNow3);
     //DBadmin.connectDB();
     // DBadmin.startUpdate();
 

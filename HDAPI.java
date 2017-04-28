@@ -87,6 +87,7 @@ public class HDAPI{
 
     public JSONObject getStatistics(String token,String boxname,int starttime, int endtime) throws Exception{
 	String urlstring = generateStatisticsURL(boxname,starttime,endtime);
+	System.out.println(urlstring);
 	HttpURLConnection HDconn = httpGet(urlstring,token);
 	int respCode = HDconn.getResponseCode();
 	JSONObject resp = inputToJSONObject(HDconn);
@@ -95,9 +96,12 @@ public class HDAPI{
     }
 
     public String generateStatisticsURL(String boxname, int starttime, int endtime){
+	
 	String start = Integer.toString(starttime);
 	String end = Integer.toString(endtime);
-	return boxesURL+"/"+boxname+"/statistics?begin_time=2017-03-31T"+start+":00&end_time=2017-03-31T"+end+":00";
+	if (starttime < 10) {start = "0"+start;}
+	if (endtime < 10) {end = "0"+end;}
+	return boxesURL+"/"+boxname+"/statistics?begin_time=2017-04-28T"+start+":00&end_time=2017-04-28T"+end+":00";
     }
 
 
